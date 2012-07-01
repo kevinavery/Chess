@@ -1,0 +1,28 @@
+h1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 40px 0px 70px;
+	text-align: center;
+}
+
+#chessBoard {
+	display: table;
+	margin: auto;
+}
+
+DIV.dragdrop-dropTarget-engage {
+	background: #BCDEFF; /* lighter blue */
+}
+
+.black-square {
+	background-color: #202020;
+}
+
+.white-square {
+	background-color: #E0E0E0;
+}
+
+.valid-position {
+	background-color: #FFFF66;
+}
