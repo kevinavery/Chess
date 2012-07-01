@@ -15,9 +15,9 @@ public class ChessBoard extends SimplePanel {
 
 	private static final String CSS_CHESS_BOARD = "chess-board";
 	
-	private PickupDragController dragController;
-	
+	private Board board;
 	private List<ChessPosition> chessPositions;
+	private PickupDragController dragController;
 
 	public ChessBoard() {
 		
@@ -39,25 +39,37 @@ public class ChessBoard extends SimplePanel {
 		
 		chessPositions = new ArrayList<ChessPosition>();
 
-		Board board = new Board();
+		board = new Board();
 		for (Position pos : board.getPositions()) {
 
-			ChessPosition chessPosition = new ChessPosition(pos, dragController);
+			ChessPosition chessPosition = new ChessPosition(pos);
 			
 			chessPosition.setPixelSize(100, 100);
 			int row = pos.getY();
 			int col = pos.getX();
 			grid.setWidget(row, col, chessPosition);
-			// TODO center widget in cell
-			// grid.getCellFormatter().setStyleName(row, col, styleName);
 
 			chessPositions.add(chessPosition);
 
 			// Register a drop controller for the panel in the current cell
-			ChessPositionDropController dropController = new ChessPositionDropController(chessPosition, chessPositions, board);
+			ChessPositionDropController dropController = new ChessPositionDropController(chessPosition, this);
 			dragController.registerDropController(dropController);
-			
 		}
+		
+		reDrawPieces();
+	}
+	
+	public void reDrawPieces() {
+		for (int i = 0; i < 64; i++) 
+			chessPositions.get(i).setPiece(board.getPositions().get(i), dragController);
+	}
+	
+	public Board getBoard() {
+		return board;
+	}
+	
+	public List<ChessPosition> getPositions() {
+		return chessPositions;
 	}
 
 	public DragController getDragController() {

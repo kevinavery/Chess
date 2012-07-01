@@ -17,7 +17,7 @@ public class ChessPosition extends SimplePanel {
 	
 	private Position position;
 	
-	public ChessPosition (Position p, DragController dragController) {
+	public ChessPosition (Position p) {
 		super();
 		position = p;
 		
@@ -30,6 +30,10 @@ public class ChessPosition extends SimplePanel {
 		} else {
 			addStyleName("white-square");
 		}
+	}
+	
+	public void setPiece(Position p, DragController dragController) {
+		setWidget(null);
 		
 		if (p.hasPiece())
 			setWidget(createDraggablePiece(p.getPiece(), dragController));

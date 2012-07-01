@@ -1,9 +1,7 @@
 package com.avery.chess.shared;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Board {
 	
@@ -43,7 +41,7 @@ public class Board {
 	}
 	
 	public Position getPosition(int x, int y) {
-		int index = 8*x + y;
+		int index = Position.calcIndex(x, y);
 		
 		if (index < 0 || index > 63)
 			return null;
@@ -63,12 +61,7 @@ public class Board {
 	}
 
 	public void clearPosition(int x, int y) {
-		for (Position p : positions) {
-			if (p.getX() == x && p.getY() == y) {
-				p.removePiece();
-				return;
-			}
-		}
+		positions.get(Position.calcIndex(x, y)).removePiece();
 	}
 
 	public Piece getLastPieceMoved() {

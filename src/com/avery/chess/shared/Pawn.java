@@ -11,7 +11,7 @@ public class Pawn extends Piece {
 		EnPassant
 	}
 	
-	private int direction;
+	private final int direction;
 	private boolean hasMoved;
 	private boolean justMovedTwoSpaces;
 	
@@ -29,7 +29,7 @@ public class Pawn extends Piece {
 	}
 
 	/**
-	 * Take in a position on the board and determine what MoveType
+	 * Takes a position on the board and determines what MoveType
 	 * that would be for this pawn.
 	 */
 	private MoveType getMoveType(Position pos, Board b) {
@@ -79,7 +79,7 @@ public class Pawn extends Piece {
 	private boolean isEnPassant(Position pos, Board b) {
 		if (pos.getY() == position.getY() + direction && Math.abs(pos.getX() - position.getX()) == 1) {
 			Position opponentPosition = b.getPosition(pos.getX(), pos.getY() - direction);
-			if (opponentPosition != null) {
+			if (opponentPosition != null && isOppenentPiece(opponentPosition)) {
 				Piece opponentPiece = opponentPosition.getPiece();
 				if (opponentPiece instanceof Pawn && opponentPiece.equals(b.getLastPieceMoved())) 
 					if (((Pawn)opponentPiece).justMovedTwoSpaces)
@@ -102,6 +102,7 @@ public class Pawn extends Piece {
 		}
 
 		newPos.setPiece(this);
+		position.removePiece();
 		position = newPos;
 		hasMoved = true;
 		

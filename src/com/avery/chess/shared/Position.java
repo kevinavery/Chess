@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Position {
 	
-	private int x;
-	private int y;
-	private int index;
+	private final int x;
+	private final int y;
+	private final int index;
 	
 	private Piece piece;
 	
@@ -17,7 +17,11 @@ public class Position {
 	public Position(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.index = 8*x + y;
+		this.index = calcIndex(x, y);
+	}
+	
+	public static int calcIndex(int x, int y) {
+		return 8*x + y;
 	}
 	
 	public int getIndex() {
@@ -48,6 +52,10 @@ public class Position {
 		return piece;
 	}
 	
+	/**
+	 * This could be used to highlight the nearest valid position while 
+	 * the user is dragging a piece around the board.
+	 */
 	public Position getNearestPosition(List<Position> positions) {
 		Position nearest = this;
 		double minDistance = Double.MAX_VALUE;
