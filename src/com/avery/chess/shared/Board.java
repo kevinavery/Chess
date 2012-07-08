@@ -25,7 +25,7 @@ public class Board {
 				}
 				else if (y == 1 || y == 6) {
 					Position p = new Position(x,y);
-					p.setPiece(new Pawn(p, isWhite));
+					p.setPiece(new Pawn(this, p, isWhite));
 					positions.add(p);					
 				}
 				else {
@@ -34,6 +34,15 @@ public class Board {
 				}
 			}
 		}
+		
+		for (Position pos : positions) {
+			if (pos.hasPiece())
+				pos.getPiece().updateValidPositions();
+		}
+	}
+	
+	public boolean move (Position oldPos, Position newPos) {
+		return oldPos.getPiece().move(newPos);
 	}
 	
 	public List<Position> getPositions() {
@@ -49,14 +58,11 @@ public class Board {
 			return positions.get(index);
 	}
 	
-	public boolean move (Position oldPos, Position newPos) {
-		return oldPos.getPiece().move(newPos, this);
+	public boolean fits(Position p) {
+		return fits(p.getX(), p.getY());
 	}
 	
-	public boolean fits(Position p) {
-		int x = p.getX();
-		int y = p.getY();
-		
+	public boolean fits(int x, int y) {
 		return x >= 0 && x <= 7 && y >= 0 && y <= 7;
 	}
 

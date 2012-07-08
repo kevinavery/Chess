@@ -1,5 +1,7 @@
 package com.avery.chess.shared;
 
+import java.util.ArrayList;
+
 
 public class Pawn extends Piece {
 	
@@ -14,9 +16,10 @@ public class Pawn extends Piece {
 	private final int direction;
 	private boolean hasMoved;
 	private boolean justMovedTwoSpaces;
+	private boolean moving = false;
 	
-	public Pawn(Position p, boolean isWhite) {
-		super(p, isWhite);
+	public Pawn(Board b, Position p, boolean isWhite) {
+		super(b, p, isWhite);
 		
 		direction = isWhite ? -1 : 1;
 		hasMoved = false;
@@ -24,34 +27,55 @@ public class Pawn extends Piece {
 	}
 	
 	@Override
-	boolean canMove(Position pos, Board b) {
-		return !getMoveType(pos, b).equals(MoveType.Illegal);
+	public void updateValidPositions() {
+		if (moving) return;
+		
+		validPositions.clear();
+		for (Position pos : board.getPositions()) {
+			if (!getMoveType(pos).equals(MoveType.Illegal)) {
+				validPositions.add(pos);
+			}
+		}
+		
+		// add update listeners
+		for (int dx = -1; dx <= 1; dx++) {
+			for (int dy = 0; dy <= 2; dy++) {
+				if ((dx != 0 && dy == 2) || (dx == 0 && dy == 0))
+					continue;
+				int x = position.getX() + dx;
+				int y = position.getY() + (dy * direction);
+				if (board.fits(x, y)) {
+					Position pos = board.getPosition(x, y);
+					pos.addListener(this);
+				}
+			}
+		}
 	}
 
 	/**
 	 * Takes a position on the board and determines what MoveType
 	 * that would be for this pawn.
 	 */
-	private MoveType getMoveType(Position pos, Board b) {
-		if (!b.fits(pos))
+	private MoveType getMoveType(Position pos) {
+		if (!board.fits(pos))
 			return MoveType.Illegal;
 		
-		if (isMoveForwardOne(pos, b))
+		if (isMoveForwardOne(pos))
 			return MoveType.ForwardOne;
 		
-		if (isMoveForwardTwo(pos, b))
+		if (isMoveForwardTwo(pos))
 			return MoveType.ForwardTwo;
 		
-		if (isDiagonalCapture(pos, b))
+		if (isDiagonalCapture(pos))
 			return MoveType.Diagonal;		
 		
-		if (isEnPassant(pos, b))
+		if (isEnPassant(pos))
 			return MoveType.EnPassant;
 		
 		return MoveType.Illegal;
 	}
 	
-	private boolean isMoveForwardOne(Position pos, Board b) {
+	private boolean isMoveForwardOne(Position pos) {
 		if (pos.getX() == position.getX() && pos.getY() == position.getY() + direction)
 			if (!pos.hasPiece())
 				return true;
@@ -59,8 +83,8 @@ public class Pawn extends Piece {
 		return false;
 	}
 	
-	private boolean isMoveForwardTwo(Position pos, Board b) {
-		if (!hasMoved && isMoveForwardOne(new Position(pos.getX(),pos.getY()-direction), b)) 
+	private boolean isMoveForwardTwo(Position pos) {
+		if (!hasMoved && isMoveForwardOne(new Position(pos.getX(),pos.getY()-direction))) 
 			if (pos.getX() == position.getX() && pos.getY() == position.getY() + (2*direction))
 				if (!pos.hasPiece())
 					return true;
@@ -68,7 +92,7 @@ public class Pawn extends Piece {
 		return false;
 	}
 	
-	private boolean isDiagonalCapture(Position pos, Board b) {
+	private boolean isDiagonalCapture(Position pos) {
 		if (pos.getY() == position.getY() + direction && Math.abs(pos.getX() - position.getX()) == 1) 
 			if (isOppenentPiece(pos))
 				return true;
@@ -76,12 +100,12 @@ public class Pawn extends Piece {
 		return false;
 	}
 	
-	private boolean isEnPassant(Position pos, Board b) {
+	private boolean isEnPassant(Position pos) {
 		if (pos.getY() == position.getY() + direction && Math.abs(pos.getX() - position.getX()) == 1) {
-			Position opponentPosition = b.getPosition(pos.getX(), pos.getY() - direction);
+			Position opponentPosition = board.getPosition(pos.getX(), pos.getY() - direction);
 			if (opponentPosition != null && isOppenentPiece(opponentPosition)) {
 				Piece opponentPiece = opponentPosition.getPiece();
-				if (opponentPiece instanceof Pawn && opponentPiece.equals(b.getLastPieceMoved())) 
+				if (opponentPiece instanceof Pawn && opponentPiece.equals(board.getLastPieceMoved())) 
 					if (((Pawn)opponentPiece).justMovedTwoSpaces)
 						return true;
 			}
@@ -90,8 +114,10 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	boolean move(Position newPos, Board board) {
-		MoveType type = getMoveType(newPos, board);
+	public boolean move(Position newPos) {
+		moving = true; // this is needed to avoid attempting to update current valid positions during enpassant
+		
+		MoveType type = getMoveType(newPos);
 		
 		switch (type) {
 			case Illegal: 		return false;
@@ -101,14 +127,11 @@ public class Pawn extends Piece {
 			default: 			justMovedTwoSpaces = false;
 		}
 
-		newPos.setPiece(this);
-		position.removePiece();
-		position = newPos;
 		hasMoved = true;
 		
-		board.setLastPieceMoved(this);
+		moving = false;
 		
-		return true;
+		return super.move(newPos);
 	}
 
 }

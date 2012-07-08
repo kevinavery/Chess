@@ -1,12 +1,15 @@
 package com.avery.chess.shared;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Position {
 	
 	private final int x;
 	private final int y;
 	private final int index;
+	private Map<Piece, PositionUpdateListener> listeners;
 	
 	private Piece piece;
 	
@@ -18,6 +21,7 @@ public class Position {
 		this.x = x;
 		this.y = y;
 		this.index = calcIndex(x, y);
+		listeners = new HashMap<Piece, PositionUpdateListener>();
 	}
 	
 	public static int calcIndex(int x, int y) {
@@ -41,20 +45,36 @@ public class Position {
 	}
 	
 	public void removePiece() {
-		piece = null;
+		setPiece(null);
 	}
 	
 	public void setPiece(Piece p) {
 		piece = p;
+		notifyListeners();
 	}
 	
 	public Piece getPiece() {
 		return piece;
 	}
 	
+	public void addListener(Piece p) {
+		listeners.put(p, new PositionUpdateListener(p));
+	}
+	
+	public void removeListener(Piece p) {
+		listeners.remove(p);
+	}
+	
+	private void notifyListeners() {
+		for (PositionUpdateListener listener : listeners.values())
+			listener.onPositionUpdate(this);
+	}
+	
 	/**
 	 * This could be used to highlight the nearest valid position while 
 	 * the user is dragging a piece around the board.
+	 * 
+	 * Probably should become a static method in Board.
 	 */
 	public Position getNearestPosition(List<Position> positions) {
 		Position nearest = this;
@@ -84,7 +104,8 @@ public class Position {
 	}
 	
 	public String toStringWithPiece() {
-		return this + " " + (hasPiece() ? piece.toString() : "");
+		return this + (hasPiece() ? " holds a " + piece.toString() : "");
+				
 	}
 	
 	

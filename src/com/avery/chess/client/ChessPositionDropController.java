@@ -35,7 +35,7 @@ public class ChessPositionDropController extends SimpleDropController {
 		if (validPositions == null) {
 			log("onMove: "+getPieceFromContext(context).toStringWithPosition());
 			
-			validPositions = getPieceFromContext(context).getValidPostions(board);
+			validPositions = getPieceFromContext(context).getValidPostions();
 			for (Position pos : validPositions) {
 				positions.get(pos.getIndex()).addStyleName(style_valid_position);
 			}
