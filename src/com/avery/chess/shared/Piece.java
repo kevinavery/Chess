@@ -49,10 +49,6 @@ public abstract class Piece {
 	
 	/** 
 	 * Determine if this piece can legally move to the position.
-	 * 
-	 * Each piece has different rules for how it can move that requires 
-	 * knowledge of the pieces around it and the desired position.
-	 * 
 	 */
 	public boolean canMove(Position pos) {
 		return validPositions.contains(pos);
@@ -64,7 +60,7 @@ public abstract class Piece {
 	 * Return true if the move was successful.
 	 */
 	public boolean move(Position newPos) {
-		if (!validPositions.contains(newPos))
+		if (!canMove(newPos))
 			return false;
 		
 		// Remove old listeners
@@ -87,7 +83,7 @@ public abstract class Piece {
 
 	@Override
 	public String toString() {
-		String className = getClass().toString();
+		String className = getClass().toString().toLowerCase();
 		return className.substring(className.lastIndexOf(".")+1);
 	}
 	

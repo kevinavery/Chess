@@ -8,9 +8,11 @@ package com.avery.chess.shared;
 public class PositionUpdateListener {
 	
 	private Piece piece;
+	private boolean isAttacking;
 	
-	public PositionUpdateListener(Piece p) {
+	public PositionUpdateListener(Piece p, boolean isAttacking) {
 		this.piece = p;
+		this.isAttacking = isAttacking;
 	}
 	
 	public void onPositionUpdate(Position pos) {
@@ -19,6 +21,10 @@ public class PositionUpdateListener {
 	
 	public Piece getPiece() {
 		return piece;
+	}
+	
+	public boolean isAttacking() {
+		return isAttacking;
 	}
 
 }

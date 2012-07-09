@@ -57,8 +57,8 @@ public class Position {
 		return piece;
 	}
 	
-	public void addListener(Piece p) {
-		listeners.put(p, new PositionUpdateListener(p));
+	public void addListener(Piece p, boolean isAttacking) {
+		listeners.put(p, new PositionUpdateListener(p, isAttacking));
 	}
 	
 	public void removeListener(Piece p) {

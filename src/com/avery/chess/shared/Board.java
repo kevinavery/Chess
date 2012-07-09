@@ -18,20 +18,18 @@ public class Board {
 			for (int y = 0; y < 8 ; y++) {
 				
 				boolean isWhite = y > 4;
+				Position p = new Position(x,y);
 				
-				if (y > 1 && y < 6) {
-					Position p = new Position(x,y);
-					positions.add(p);	
+				if (y == 1 || y == 6) {
+					p.setPiece(new Pawn(this, p, isWhite));		
 				}
-				else if (y == 1 || y == 6) {
-					Position p = new Position(x,y);
-					p.setPiece(new Pawn(this, p, isWhite));
-					positions.add(p);					
+				else if (y == 0 || y == 7) {
+					if (x == 1 || x == 6) {
+						p.setPiece(new Knight(this, p, isWhite));
+					}
 				}
-				else {
-					Position p = new Position(x,y);
-					positions.add(p);	
-				}
+				
+				positions.add(p);	
 			}
 		}
 		
@@ -53,7 +51,7 @@ public class Board {
 		int index = Position.calcIndex(x, y);
 		
 		if (index < 0 || index > 63)
-			return null;
+			throw new IllegalArgumentException("Position index out of range.");
 		else
 			return positions.get(index);
 	}

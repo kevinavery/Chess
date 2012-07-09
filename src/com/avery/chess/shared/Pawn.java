@@ -1,8 +1,5 @@
 package com.avery.chess.shared;
 
-import java.util.ArrayList;
-
-
 public class Pawn extends Piece {
 	
 	private enum MoveType {
@@ -46,7 +43,8 @@ public class Pawn extends Piece {
 				int y = position.getY() + (dy * direction);
 				if (board.fits(x, y)) {
 					Position pos = board.getPosition(x, y);
-					pos.addListener(this);
+					boolean isAttacking = dy == 1 && dx != 0;
+					pos.addListener(this, isAttacking);
 				}
 			}
 		}
@@ -84,11 +82,14 @@ public class Pawn extends Piece {
 	}
 	
 	private boolean isMoveForwardTwo(Position pos) {
-		if (!hasMoved && isMoveForwardOne(new Position(pos.getX(),pos.getY()-direction))) 
-			if (pos.getX() == position.getX() && pos.getY() == position.getY() + (2*direction))
-				if (!pos.hasPiece())
-					return true;
-		
+		if (!hasMoved)  {
+			int fx = pos.getX();
+			int fy = pos.getY()-direction;
+			if (board.fits(fx, fy) && isMoveForwardOne(board.getPosition(fx, fy)))
+				if (pos.getX() == position.getX() && pos.getY() == position.getY() + (2*direction))
+					if (!pos.hasPiece())
+						return true;
+		}
 		return false;
 	}
 	

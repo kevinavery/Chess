@@ -51,9 +51,7 @@ public class ChessPosition extends SimplePanel {
 		ChessPiece pieceImg = new ChessPiece(p);
 		String color = p.isWhite() ? "white" : "black";
 
-		if (p instanceof Pawn) {
-			pieceImg.setUrl("/images/pawn_" + color + ".png");
-		}
+		pieceImg.setUrl("/images/" + p.toString() + "_" + color + ".png");
 
 		dragController.makeDraggable(pieceImg);
 
