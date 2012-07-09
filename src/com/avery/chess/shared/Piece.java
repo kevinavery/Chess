@@ -83,8 +83,9 @@ public abstract class Piece {
 
 	@Override
 	public String toString() {
+		String color = isWhite ? "white" : "black";
 		String className = getClass().toString().toLowerCase();
-		return className.substring(className.lastIndexOf(".")+1);
+		return className.substring(className.lastIndexOf(".")+1) +"_"+ color ;
 	}
 	
 	public String toStringWithPosition() {

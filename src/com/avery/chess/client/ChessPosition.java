@@ -1,7 +1,6 @@
 package com.avery.chess.client;
 
 import com.allen_sauer.gwt.dnd.client.DragController;
-import com.avery.chess.shared.Pawn;
 import com.avery.chess.shared.Piece;
 import com.avery.chess.shared.Position;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -49,12 +48,8 @@ public class ChessPosition extends SimplePanel {
 	
 	private Widget createDraggablePiece(Piece p, DragController dragController) {
 		ChessPiece pieceImg = new ChessPiece(p);
-		String color = p.isWhite() ? "white" : "black";
-
-		pieceImg.setUrl("/images/" + p.toString() + "_" + color + ".png");
-
+		pieceImg.setUrl("/images/" + p.toString() + ".png");
 		dragController.makeDraggable(pieceImg);
-
 		return pieceImg;
 	}
 
