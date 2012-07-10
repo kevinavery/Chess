@@ -13,6 +13,7 @@ public class Board {
 	public Board() {
 		positions = new ArrayList<Position>();
 		
+		// Lay out the board
 		for (int x = 0; x < 8; x++) {
 			
 			for (int y = 0; y < 8 ; y++) {
@@ -24,15 +25,19 @@ public class Board {
 					p.setPiece(new Pawn(this, p, isWhite));		
 				}
 				else if (y == 0 || y == 7) {
-					if (x == 1 || x == 6) {
+					if (x == 0 || x == 7)
+						p.setPiece(new Rook(this, p, isWhite));
+					else if (x == 1 || x == 6) 
 						p.setPiece(new Knight(this, p, isWhite));
-					}
+					else if (x == 2 || x == 5)
+						p.setPiece(new Bishop(this, p, isWhite));
 				}
 				
 				positions.add(p);	
 			}
 		}
 		
+		// Initialize all the validPositiosn of all Pieces
 		for (Position pos : positions) {
 			if (pos.hasPiece())
 				pos.getPiece().updateValidPositions();

@@ -15,7 +15,7 @@ public class PositionUpdateListener {
 		this.isAttacking = isAttacking;
 	}
 	
-	public void onPositionUpdate(Position pos) {
+	public void onPositionUpdate() {
 		piece.updateValidPositions();
 	}
 	

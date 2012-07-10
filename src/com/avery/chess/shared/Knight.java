@@ -10,8 +10,7 @@ public class Knight extends Piece {
 	public void updateValidPositions() {
 		validPositions.clear();
 		
-		for (int dx = -2; dx <= 2; dx+= 1) {
-			int dy;
+		for (int dx = -2, dy; dx <= 2; dx+= 1) {
 			if (dx < 0) {
 				dy = dx + 3;
 				checkAndAdd(dx, dy);
@@ -33,9 +32,9 @@ public class Knight extends Piece {
 		
 		if (board.fits(x,y)) {
 			Position pos = board.getPosition(x, y);
+			pos.addListener(this, true);
 			if (!pos.hasPiece() || isOppenentPiece(pos)) {
 				validPositions.add(pos);
-				pos.addListener(this, true);
 			}
 		}
 	}

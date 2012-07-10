@@ -67,7 +67,7 @@ public class Position {
 	
 	private void notifyListeners() {
 		for (PositionUpdateListener listener : listeners.values())
-			listener.onPositionUpdate(this);
+			listener.onPositionUpdate();
 	}
 	
 	/**

@@ -78,6 +78,11 @@ public abstract class Piece {
 		
 		updateValidPositions();
 		
+		// sigh, we must update all pawns who may be ready to enpassant
+		for (Position p : board.getPositions())
+			if (p.getPiece() instanceof Pawn && (p.getY() == 3 || p.getY() == 4))
+				p.getPiece().updateValidPositions();
+		
 		return true;
 	}
 
